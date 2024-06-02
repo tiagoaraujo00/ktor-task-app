@@ -1,5 +1,7 @@
 package dev.tiagoaraujo00.plugins
 
+import dev.tiagoaraujo00.models.tasksAsTable
+import dev.tiagoaraujo00.repositories.TaskRepository
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
@@ -14,15 +16,10 @@ fun Application.configureRouting() {
     }
     routing {
         get("/tasks") {
+            val tasks = TaskRepository.allTasks()
             call.respondText(
                 contentType = ContentType.parse("text/html"),
-                text = """
-                <h3>TODO:</h3>
-                <ol>
-                    <li>A table of all the tasks</li>
-                    <li>A form to submit new tasks</li>
-                </ol>
-                """.trimIndent()
+                text = tasks.tasksAsTable()
             )
         }
     }
