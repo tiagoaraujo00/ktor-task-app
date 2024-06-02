@@ -1,5 +1,6 @@
 package dev.tiagoaraujo00.plugins
 
+import dev.tiagoaraujo00.models.Priority
 import dev.tiagoaraujo00.models.tasksAsTable
 import dev.tiagoaraujo00.repositories.TaskRepository
 import io.ktor.http.*
@@ -21,6 +22,29 @@ fun Application.configureRouting() {
                 contentType = ContentType.parse("text/html"),
                 text = tasks.tasksAsTable()
             )
+        }
+        get("task/byPriority/{priority}") {
+            val priorityAsText = call.parameters["priority"]
+            if(priorityAsText == null) {
+                call.respond(HttpStatusCode.BadRequest)
+                return@get
+            }
+            try {
+                val priority = Priority.valueOf(priorityAsText)
+                val tasks = TaskRepository.tasksByPriority(priority)
+
+                if(tasks.isEmpty()) {
+                    call.respond(HttpStatusCode.NotFound)
+                    return@get
+                }
+
+                call.respondText(
+                    contentType = ContentType.parse("text/html"),
+                    text = tasks.tasksAsTable()
+                )
+            } catch (ex: IllegalArgumentException) {
+                call.respond(HttpStatusCode.BadRequest)
+            }
         }
     }
 }
