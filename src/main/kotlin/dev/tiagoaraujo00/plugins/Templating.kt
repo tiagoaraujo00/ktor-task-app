@@ -1,4 +1,4 @@
-package com.example.plugins
+package dev.tiagoaraujo00.plugins
 
 import freemarker.cache.*
 import io.ktor.server.application.*

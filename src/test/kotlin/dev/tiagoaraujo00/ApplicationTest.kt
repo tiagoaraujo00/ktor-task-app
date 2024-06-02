@@ -1,6 +1,7 @@
-package com.example
+package dev.tiagoaraujo00
 
 import com.example.plugins.*
+import dev.tiagoaraujo00.plugins.configureRouting
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
