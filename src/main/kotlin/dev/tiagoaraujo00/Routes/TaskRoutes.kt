@@ -41,6 +41,22 @@ fun Route.taskRouting() {
                 call.respond(HttpStatusCode.BadRequest)
             }
         }
+        get("/ByName/{taskName}") {
+            val taskName = call.parameters["taskName"]
+            if (taskName == null) {
+                call.respond(HttpStatusCode.BadRequest)
+                return@get
+            }
+            val task = TaskRepository.taskByName(taskName)
+            if (task == null) {
+                call.respond(HttpStatusCode.NotFound)
+                return@get
+            }
+            call.respondText(
+                contentType = ContentType.parse("text/html"),
+                text = listOf(task).tasksAsTable()
+            )
+        }
         post {
             val formContent = call.receiveParameters()
             val params = Triple(
